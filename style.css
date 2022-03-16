@@ -1,5 +1,10 @@
 body {
 	background: #f9e933;
+	font-family: 'Inter', sans-serif;
+	font-size: 100%;
+}
+h1, h2, h3, h4 {
+	font-family: 'Ubuntu', sans-serif;
 }
 header, main, footer {
 	min-width: 855px;
@@ -15,14 +20,23 @@ header {
 header h1 {
 	float: left;
 	width: 570px;
+	font-size: 300%;
+	font-style: italic;
 }
 header nav {
 	float: right;
 	width: 285px;
 }
+
 main {
 	background: white;
 	overflow: auto;
+}
+main .container h2 {
+	font-size: 150%;
+}
+main .container h3 {
+	font-size: 130%;
 }
 main .container .maintext {
 	float: left;
@@ -32,6 +46,10 @@ main .container .mainimage {
 	float: right;
 	width: 285px;
 }
+
+footer .container h5 {
+	font-size: 120%;
+}
 footer .container .contact {
 	float: left;
 	width: 570px;
@@ -40,3 +58,5 @@ footer .container .sitemap {
 	float: right;
 	width: 285px;
 }
+
+
