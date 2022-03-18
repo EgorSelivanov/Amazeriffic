@@ -8,6 +8,7 @@ var main = function () {
 	"Обновить несколько новых задач", 
 	"Купить продукты"
 	];
+	//переберем все элементы span внутри вкладок
 	$(".tabs a span").toArray().forEach(function (element) {
 		//создаем обработку щелчков для этого элемента
 		$(element).on("click", function () {
