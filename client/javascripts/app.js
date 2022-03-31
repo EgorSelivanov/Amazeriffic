@@ -33,33 +33,8 @@ var main = function (toDoObjects) {
 				});
 			} else if ($element.parent().is(":nth-child(3)")) {
 				console.log("Щелчок на вкладке Теги!");
-				var organizedByTag = [
-					{
-					"name": "покупки",
-					"toDos": ["Купить продукты"]
-					},
-					{
-					"name": "рутина",
-					"toDos": ["Купить продукты", "Вывести Грейси на прогулку в парк"]
-					},
-					{
-					"name": "писательство",
-					"toDos": ["Сделать несколько новых задач", "Закончить писать книгу"]
-					},
-					{
-					"name": "работа",
-					"toDos": ["Сделать несколько новых задач", "Подготовиться к лекции в понедельник",
-					"Ответить на электронные письма", "Закончить писать книгу"]
-					},
-					{
-					"name": " преподавание",
-					"toDos": ["Подготовиться к лекции в понедельник"]
-					},
-					{
-					"name": "питомцы",
-					"toDos": ["Вывести Грейси на прогулку в парк "]
-					}
-					];
+				var organizedByTag = organizeByTags(toDoObjects);
+				
 				organizedByTag.forEach(function(tag){
 					var $tagName = $("<h3>").text(tag.name),
 					$content = $("<ul>");
@@ -91,6 +66,39 @@ var main = function (toDoObjects) {
 	});
 	$(".tabs a:first-child span").trigger("click");
 };
+
+var organizeByTags = function(toDoObjects) {
+	//Создание пустого массива для тегов
+	var tags = [];
+	//перебираем все задачи toDos
+	toDoObjects.forEach(function(toDo){
+		//перебираем все теги для каждой задачи
+		toDo.tags.forEach(function (tag) {
+			//убеждаемся, что этого тега еще нет в массиве
+			if (tags.indexOf(tag) === -1) {
+				tags.push(tag);
+			}
+		});
+	});
+
+	var tagObjects = tags.map(function (tag){
+		//находим все задачи, содержащие этот тег
+		var toDosWithTag = [];
+		toDoObjects.forEach(function (toDo){
+			//проверка, что результат indexOf не равен -1
+			if (toDo.tags.indexOf(tag) !== -1){
+				toDosWithTag.push(toDo.description);
+			}
+		});
+		//связываем каждый тег с объектом, который
+		//содержит название тега и массив
+		return {"name":tag, "toDos":toDosWithTag };
+	});
+
+	return tagObjects;
+	console.log(tags);
+};
+
 $(document).ready(function () {
 	$.getJSON("../todos.json", function (toDoObjects) {
 		// вызов функции main с аргументом в виде объекта toDoObjects
