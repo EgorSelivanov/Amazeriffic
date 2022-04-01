@@ -105,6 +105,13 @@ a:hover {
 	margin: 1%;
 }
 
+.input-tag {
+	border-radius: 15px;
+	height: 5%;
+	width: 25%;
+	margin: 1%;
+}
+
 .add-task-btn {
 	background-color: lightgreen;
 	color: black;

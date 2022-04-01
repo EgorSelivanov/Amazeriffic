@@ -48,16 +48,24 @@ var main = function (toDoObjects) {
 			} else if ($element.parent().is(":nth-child(4)")) {
 				console.log("Щелчок на третьей вкладке!");
 				$(".content").append(
-					'<input type="text" class="input-task">'+
+					'<input type="text" class="input-task">Описание</input><br>'+
+					'<input type="text" class="input-tag">Теги</input><br>'+ 
 					'<button class="add-task-btn">Добавить</button>'
 				);
-				var newTask;
+				var description;
+				var newTags;
 				$('.add-task-btn').on('click',function(){
-					newTask = $('.input-task').val();
-					if (newTask != '') {
-						toDos.push( newTask);
-						alert('Новое задание "' + newTask + '" успешно добавлено!');
+					description = $('.input-task').val();
+					newTags = $('.input-tag').val();
+					if ((description != '') && (newTags != '')) {
+						var tags = newTags.split(",");
+						toDoObjects.push({"description":description, "tags":tags});
+						toDos = toDoObjects.map(function(toDo){
+							return toDo.description;
+						})
+						alert('Новое задание "' + description + '" успешно добавлено!');
 						$('.input-task').val("");
+						$('.input-tag').val("");
 					}
 				})
 			}
