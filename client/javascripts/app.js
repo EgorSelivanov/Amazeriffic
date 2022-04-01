@@ -1,10 +1,6 @@
 var main = function (toDoObjects) {
 	"use strict";
-	var toDos = toDoObjects.map(function (toDo) {
-		// просто возвращаем описание
-		// этой задачи
-		return toDo.description;
-	});
+	var toDos = getDescription(toDoObjects); 
 	//переберем все элементы span внутри вкладок
 	$(".tabs a span").toArray().forEach(function (element) {
 		//создаем обработку щелчков для этого элемента
@@ -46,7 +42,7 @@ var main = function (toDoObjects) {
 					$("main .content").append($content);
 				});
 			} else if ($element.parent().is(":nth-child(4)")) {
-				console.log("Щелчок на третьей вкладке!");
+				console.log("Щелчок на 4 вкладке!");
 				$(".content").append(
 					'<input type="text" class="input-task">Описание</input><br>'+
 					'<input type="text" class="input-tag">Теги</input><br>'+ 
@@ -55,17 +51,20 @@ var main = function (toDoObjects) {
 				var description;
 				var newTags;
 				$('.add-task-btn').on('click',function(){
-					description = $('.input-task').val();
-					newTags = $('.input-tag').val();
+					description = $('.input-task').val().trim();
+					newTags = $('.input-tag').val().trim();
 					if ((description != '') && (newTags != '')) {
 						var tags = newTags.split(",");
 						toDoObjects.push({"description":description, "tags":tags});
-						toDos = toDoObjects.map(function(toDo){
-							return toDo.description;
-						})
+						toDos = getDescription(toDoObjects);
 						alert('Новое задание "' + description + '" успешно добавлено!');
 						$('.input-task').val("");
 						$('.input-tag').val("");
+					}
+				});
+				$(".input-task, .input-tag").keyup(function(event){
+					if (event.keyCode == 13) {
+						$(".add-task-btn").click();
 					}
 				})
 			}
@@ -104,8 +103,16 @@ var organizeByTags = function(toDoObjects) {
 	});
 
 	return tagObjects;
-	console.log(tags);
 };
+
+var getDescription = function(toDoObjects) {
+	var toDos = toDoObjects.map(function (toDo) {
+		// просто возвращаем описание
+		// этой задачи
+		return toDo.description;
+	});
+	return toDos;
+}
 
 $(document).ready(function () {
 	$.getJSON("../todos.json", function (toDoObjects) {

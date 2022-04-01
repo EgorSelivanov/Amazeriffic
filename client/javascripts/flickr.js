@@ -1,5 +1,3 @@
-var flag = 1;
-
 var main = function (flickrResponse) {
 	"use strict";
 	var tag;
@@ -20,8 +18,6 @@ var show = function(tag){
 		var displayImage = function (imageIndex) {
 			if (imageIndex == flickrResponse.items.length)
 				imageIndex = 0;
-			if (flag < 0)
-				return;
 			// создаем новый элемент jQuery для хранения изображений, но пока скрываем его
 			var $img = $("<img>").hide();
 			// устанавливаем атрибут для URL, находящегося в ответе
