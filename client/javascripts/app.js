@@ -50,13 +50,32 @@ var main = function (toDoObjects) {
 				);
 				var description;
 				var newTags;
+				var newToDo;
 				$('.add-task-btn').on('click',function(){
 					description = $('.input-task').val().trim();
 					newTags = $('.input-tag').val().trim();
 					if ((description != '') && (newTags != '')) {
 						var tags = newTags.split(",");
-						toDoObjects.push({"description":description, "tags":tags});
-						toDos = getDescription(toDoObjects);
+						//toDoObjects.push({"description":description, "tags":tags});
+						//toDos = getDescription(toDoObjects);
+
+						// создаем новый элемент списка задач
+						newToDo = {"description":description, "tags":tags};
+
+						$.post("todos", newToDo, function (result){					
+							console.log(result);
+
+						});
+
+						// нужно отправить новый объект на клиент
+						// после получения ответа сервера
+						toDoObjects.push(newToDo);
+
+						// обновление toDos
+						toDos = toDoObjects.map(function (toDo) {
+							return toDo.description;
+						});
+
 						alert('Новое задание "' + description + '" успешно добавлено!');
 						$('.input-task').val("");
 						$('.input-tag').val("");
@@ -115,7 +134,7 @@ var getDescription = function(toDoObjects) {
 }
 
 $(document).ready(function () {
-	$.getJSON("../todos.json", function (toDoObjects) {
+	$.getJSON("/todos.json", function (toDoObjects) {
 		// вызов функции main с аргументом в виде объекта toDoObjects
 		main(toDoObjects);
 	});
