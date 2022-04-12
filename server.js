@@ -3,6 +3,8 @@ var express = require("express"),
 	// импортируем библиотеку mongoose
 	mongoose = require("mongoose"),
 	app = express(),
+	toDosController = require("./controllers/todos_controller.js"),
+	usersController = require("./controllers/users_controller.js"),
 	toDos = [
 		{
 		"description" : "Купить продукты",
