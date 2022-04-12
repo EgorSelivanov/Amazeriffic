@@ -34,7 +34,9 @@ var express = require("express"),
 		}
 	];
 
-app.use(express.static(__dirname + "/client"));
+app.use('/', express.static(__dirname + "/client"));
+app.use('/user/:username', express.static(__dirname + "/client"));
+
 // командуем Express принять поступающие
 // объекты JSON
 app.use(express.urlencoded({ extended: true}));
@@ -92,12 +94,15 @@ app.post("/todos", function (req, res) {
 			});
 		}
 	});
-	
-	
-	/*// сейчас объект сохраняется в req.body
-	var newToDo = req.body;
-	console.log(newToDo);
-	toDos.push(newToDo);
-	// отправляем простой объект
-	res.json({"message":"Вы размещаетесь на сервере!"});*/
 });
+
+app.get("/users.json", usersController.index);
+app.post("/users", usersController.create);
+app.get("/users/:username", usersController.show);
+app.put("/users/:username", usersController.update);
+app.delete("/users/:username", usersController.destroy);
+
+app.get("/user/:username/todos.json", toDosController.index);
+app.post("/user/:username/todos", toDosController.create);
+app.put("/user/:username/todos/:id", toDosController.update);
+app.delete("/user/:username/todos/:id", toDosController.destroy);
