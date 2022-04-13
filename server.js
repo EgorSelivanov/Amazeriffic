@@ -4,37 +4,7 @@ var express = require("express"),
 	mongoose = require("mongoose"),
 	app = express(),
 	toDosController = require("./controllers/todos_controller.js"),
-	usersController = require("./controllers/users_controller.js"),
-	toDos = [
-		{
-		"description" : "Купить продукты",
-		"tags" : [ "шопинг", "рутина" ]
-		},
-		{
-		"description" : "Сделать несколько новых задач",
-		"tags" : [ "писательство", "работа" ]
-		},
-		{
-		"description" : "Подготовиться к лекции в понедельник",
-		"tags" : [ "работа", "преподавание" ]
-		},
-		{
-		"description" : "Ответить на электронные письма",
-		"tags" : [ "работа" ]
-		},
-		{
-		"description" : "Вывести Грейси на прогулку в парк",
-		"tags" : [ "рутина", "питомцы" ]
-		},
-		{
-		"description" : "Закончить писать книгу",
-		"tags" : [ "писательство", "работа" ]
-		},
-		{
-		"description" : "Сделать веб",
-		"tags" : [ "учеба" ]
-		}
-	];
+	usersController = require("./controllers/users_controller.js");
 
 app.use('/', express.static(__dirname + "/client"));
 app.use('/user/:username', express.static(__dirname + "/client"));
@@ -44,59 +14,25 @@ app.use('/user/:username', express.static(__dirname + "/client"));
 app.use(express.urlencoded({ extended: true}));
 
 // подключаемся к хранилищу данных Amazeriffic в Mongo
-mongoose.connect('mongodb://localhost/amazeriffic');
-
-// Это модель Mongoose для задач
-var ToDoSchema = mongoose.Schema({
-	description: String,
-	tags: [ String ]
+mongoose.connect('mongodb://localhost/amazeriffic',{
+				useNewUrlParser: true,
+				useCreateIndex: true,
+				useUnifiedTopology: true
+}).then(res => {
+	console.log("DB connected");
+}).catch(err => {
+	console.log("ERROR" + err);
 });
 
-var ToDo = mongoose.model("ToDo", ToDoSchema);
 // начинаем слушать запросы
 http.createServer(app).listen(3000);
 
-// этот маршрут замещает наш файл
-// todos.json в примере из части 5
-app.get("/todos.json", function (req, res) {
-	ToDo.find({}, function (err, toDos) {
-		if (err !== null) {
-			console.log("ERROR" + err);
-		}
-		else {
-			res.json(toDos);
-		}
-	});
-});
 
-
-app.post("/todos", function (req, res) {
-	console.log(req.body);
-	
-	var newToDo = new ToDo({
-		"description":req.body.description,
-		"tags":req.body.tags
-	});
-	
-	newToDo.save(function (err, result) {
-		if (err !== null) {
-			console.log(err);
-			res.send("ERROR");
-		} else {
-			// клиент ожидает, что будут возвращены все задачи,
-			// поэтому для сохранения совместимости сделаем дополнительный запрос
-			ToDo.find({}, function (err, result) {
-				if (err !== null) {
-					// элемент не был сохранен
-					res.send("ERROR");
-				}
-				else {
-					res.json(result);
-				}
-			});
-		}
-	});
-});
+app.get("/todos.json", toDosController.index);
+app.get("/todos/:id", toDosController.show); 
+app.post("/todos", toDosController.create);
+app.put("/todos/:id", toDosController.update);
+app.delete("/todos/:id", toDosController.destroy);
 
 app.get("/users.json", usersController.index);
 app.post("/users", usersController.create);
@@ -104,7 +40,7 @@ app.get("/users/:username", usersController.show);
 app.put("/users/:username", usersController.update);
 app.delete("/users/:username", usersController.destroy);
 
-app.get("/user/:username/todos.json", toDosController.index);
-app.post("/user/:username/todos", toDosController.create);
-app.put("/user/:username/todos/:id", toDosController.update);
-app.delete("/user/:username/todos/:id", toDosController.destroy);
+app.get("/users/:username/todos.json", toDosController.index);
+app.post("/users/:username/todos", toDosController.create);
+app.put("/users/:username/todos/:id", toDosController.update);
+app.delete("/users/:username/todos/:id", toDosController.destroy);
