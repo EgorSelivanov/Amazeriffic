@@ -59,7 +59,6 @@ UsersController.create = function(req, res) {
 	    } else if (result.length !== 0) {
 			res.status(501).send("Пользователь уже существует");
 	        console.log(err);   
-	        console.log("Пользователь уже существует"); 
 	    } else {
 	        var newUser = new User({
 	            "username": username
@@ -81,9 +80,7 @@ UsersController.create = function(req, res) {
 UsersController.update = function(req, res) {
 	console.log("Вызвано действие: обновить пользователя");
 	var username = req.params.username;
-	console.log("Старое имя пользователя: " + username);
 	var newUsername = {$set: {username: req.body.username}};
-	console.log("Новое имя пользователя: " + req.body.username);
 	User.updateOne({"username": username}, newUsername, function (err,user) {
 		if (err !== null) {
 			res.status(500).json(err);
@@ -107,9 +104,7 @@ UsersController.destroy = function(req, res) {
             console.log(err);
             res.send(500, err);
         } else if (result.length !== 0) {
-        	console.log("Удаляем все todo с 'owner': " + result[0]._id);
         	ToDo.deleteMany({"owner": result[0]._id}, function (err, todo) {
-		        console.log("Удаляем пользователя");
 				User.deleteOne({"username": username}, function (err, user) {
 					if (err !== null) {
 						res.status(500).json(err);
